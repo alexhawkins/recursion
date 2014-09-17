@@ -1,7 +1,7 @@
 //Walk the DOM from the given parent node, looping along the element.nextSibling 
-//pointer. If the current node in the loop has children, you can call the 
-//traverseDOm function recursively. Note that t's not a straight string comparison 
-//because elements can have multiple classes.
+//pointer. If the current node in the loop has children, call the 
+//traverseDOM function recursively. Note that this is not a straight string comparison 
+//because elements can have multiple classes. Account for this.
 
 //var $ = require('jquery')(require("jsdom").jsdom().parentWindow);
 //var _ = require('underscore');   
@@ -22,8 +22,8 @@ var getElementsByClassName = function(className) {
             if (el.childNodes.length > 0)
                 traverseDOM(el);
             //if no children, check if element has an attribute to get. If so, also 
-            //checks if an element's list of classes contains our class, If it does
-            //push the bad boy to are matches array
+            //check if an element's list of classes contains our class, If it does
+            //push to our matches array
             if (el.getAttribute && el.hasAttribute('class') && el.classList.contains(className))
                 matches.push(el);
         }
