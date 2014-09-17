@@ -11,20 +11,20 @@ var getElementsByClassName = function(className) {
     var matches = []; // where we'll store elements with our className
     //check for matches by traversing the DOM
     var traverseDOM = function(node) {
-        //check our starting node without checking childnodes as it may also have our class
+        //check our starting node without checking children as it may also have our class
         if (node === document.body && node.classList.contains(className))
             matches.push(node);
         //loop through all the children of our parent node (document.body)
-        for (var i = 0; i < node.childNodes.length; i++) {
-            var el = node.childNodes[i]; //set el variable to keeps things clean
+        for (var i = 0; i < node.children.length; i++) {
+            var el = node.children[i]; //set el variable to keeps things clean
             //if the current child node in the loop also has children, call our 
             //traverseDOM function recursively until there are no more children left
-            if (el.childNodes.length > 0)
+            if (el.children.length > 0)
                 traverseDOM(el);
-            //if no children, check if element has an attribute to get. If so, also 
+            //if no children, check if element has a class attribute to get. If so, also 
             //check if an element's list of classes contains our class, If it does
             //push to our matches array
-            if (el.getAttribute && el.hasAttribute('class') && el.classList.contains(className))
+            if (el.hasAttribute('class') && el.classList.contains(className))
                 matches.push(el);
         }
     };
