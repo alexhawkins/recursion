@@ -5,7 +5,7 @@
 
 //var $ = require('jquery')(require("jsdom").jsdom().parentWindow);
 //var _ = require('underscore');   
- 
+
 var getElementsByClassName = function(className) {
     var elements = document.body; //our starting element in the DOM
     var matches = []; // where we'll store elements with our className
@@ -17,15 +17,17 @@ var getElementsByClassName = function(className) {
         //loop through all the children of our parent node (document.body)
         for (var i = 0; i < node.children.length; i++) {
             var el = node.children[i]; //set el variable to keeps things clean
+            //terminating base case// node with no children
+            if (el.children.length === 0) {
+                if (el.hasAttribute('class') && el.classList.contains(className))
+                    matches.push(el);
             //if the current child node in the loop also has children, call our 
             //traverseDOM function recursively until there are no more children left
-            if (el.children.length > 0)
+            } else
                 traverseDOM(el);
             //if no children, check if element has a class attribute to get. If so, also 
             //check if an element's list of classes contains our class, If it does
-            //push to our matches array
-            if (el.hasAttribute('class') && el.classList.contains(className))
-                matches.push(el);
+            //push to our matches array      
         }
     };
     //initialize DOM traversal

@@ -1,50 +1,19 @@
-// this is what you would do if you liked things to be easy:
-// var stringifyJSON = JSON.stringify;
-// but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
-
-    var arrOfKeyVals = [],
-        arrVals = [],
-        objKeys = [];
-
-    /*********CHECK FOR PRIMITIVE TYPES**********/
-    if (typeof obj === 'number' || typeof obj === 'boolean' || obj === null)
-        return '' + obj;
-    else if (typeof obj === 'string')
-        return '"' + obj + '"';
-
-    /*********CHECK FOR ARRAY**********/
-    else if (Array.isArray(obj)) {
-        //check for empty array
-        if (obj[0] === undefined)
-            return '[]';
-        else {
-            obj.forEach(function(el) {
-                arrVals.push(stringifyJSON(el));
-            });
-            return '[' + arrVals + ']';
+    var elements = [];
+    var objElements = [];
+    if (!(obj instanceof Object)) //base case, get primitive types
+        return typeof obj === 'string' ? '"' + obj + '"' : "" + obj;
+    else if (Array.isArray(obj)) // get arrays, breakdown array subcomponents via recursion
+        return '[' + (elements = obj.map(function(el) { return stringifyJSON(el); })) + ']';
+    else { //get objects
+        for (var key in obj) {
+            if (obj[key] instanceof Function) //base case, get functions
+                return '{}';
+            if (!(obj[key] instanceof Object)) //base case, get primitive types
+                typeof obj[key] === 'string' ? objElements.push('"' + key + '":"' + obj[key] + '"') : objElements.push('"' + key + '":' + obj[key]);
+            else //object present, break down further via recursion;
+                objElements.push('"' + key + '":' + stringifyJSON(obj[key]));
         }
-    }
-    /*********CHECK FOR OBJECT**********/
-    else if (obj instanceof Object) {
-        //get object keys
-        objKeys = Object.keys(obj);
-        //set key output;
-        objKeys.forEach(function(key) {
-            var keyOut = '"' + key + '":';
-            var keyValOut = obj[key];
-            //skip functions and undefined properties
-            if (keyValOut instanceof Function || typeof keyValOut === undefined)
-                arrOfKeyVals.push('');
-            else if (typeof keyValOut === 'string')
-                arrOfKeyVals.push(keyOut + '"' + keyValOut + '"');
-            else if (typeof keyValOut === 'boolean' || typeof keValOut === 'number' || keyValOut === null)
-                arrOfKeyVals.push(keyOut + keyValOut);
-            //check for nested objects, call recursively until no more objects
-            else if (keyValOut instanceof Object) {
-                arrOfKeyVals.push(keyOut + stringifyJSON(keyValOut));
-            }
-        });
-        return '{' + arrOfKeyVals + '}';
+        return '{' + objElements + '}';
     }
 };
